@@ -1,4 +1,4 @@
-import { PostId } from "../PostId";
+import MakePostId, { PostId } from '../PostId';
 
 export type Post = {
     getId: () => PostId,
@@ -11,5 +11,14 @@ const MakePost = (id: PostId, content: string): Post => {
         getContent: () => content,
     }
 }
+
+type PostPrimitiveObject = {
+    id: string,
+    content: string,
+};
+
+export const MakePostFromObject = (data: PostPrimitiveObject): Post => {
+    return MakePost(MakePostId(data.id), data.content);
+} 
 
 export default MakePost;
