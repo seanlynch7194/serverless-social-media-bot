@@ -7,6 +7,8 @@ type PostsRepository = {
      */
     getPost: () => Promise<Post>,
 
+    getCrossPostBatch: () => Promise<Array<Post>>
+
     /**
      * Store new post
      */
