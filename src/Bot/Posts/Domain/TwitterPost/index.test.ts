@@ -17,7 +17,7 @@ describe('Post', () => {
     });
 
     it ('should return the post body', () => {
-        expect(makeTestTweet().getContent()).toBe('tweet content');
+        expect(makeTestTweet().getContent().getValue()).toBe('tweet content');
     });
 
     it('should return an array of image urls', () => {
