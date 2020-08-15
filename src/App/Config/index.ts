@@ -1,6 +1,8 @@
+import app from './app';
 import twitter from './twitter';
 
 const store = {
+    app,
     twitter: twitter,
 };
 
