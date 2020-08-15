@@ -1,10 +1,9 @@
+import { resolve } from '../../Container/';
 
-type LambdaEvent = {
-    
-}
-
-const handler = async (event: LambdaEvent): Promise<any> => {
-    
+const handler = (postRandomToAllNetworks: Function) => {
+    return async (): Promise<any> => {
+        return postRandomToAllNetworks();
+    }
 };
 
-export default handler; 
+export default handler(resolve('command.postRandomToAllNetworks')); 
