@@ -1,9 +1,11 @@
 import { resolve } from '../../Container/';
+import { SocialNetwork } from '../../../Bot/Posts/Domain/SocialNetwork';
 
-const handler = (postRandomToAllNetworks: Function) => {
-    return async (): Promise<any> => {
-        return postRandomToAllNetworks();
-    }
+const handler = async (): Promise<any> => {
+    const postRandomToAllNetworks = resolve('PostRandomToAllNetworks');
+    const Twitter: SocialNetwork = resolve('Twitter');
+
+    return Promise.resolve();
 };
 
-export default handler(resolve('command.postRandomToAllNetworks')); 
+export default handler; 
