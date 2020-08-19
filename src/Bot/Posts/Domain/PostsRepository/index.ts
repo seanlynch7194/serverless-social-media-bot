@@ -5,7 +5,7 @@ type PostsRepository = {
     /**
      * Get a random post
      */
-    getPost: () => Promise<Post>,
+    getPost: (postId: PostId) => Promise<Post>,
 
     getCrossPostBatch: () => Promise<Array<Post>>
 
