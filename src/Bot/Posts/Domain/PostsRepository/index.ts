@@ -1,5 +1,6 @@
 import { Post } from "../Post";
 import { PostId } from "../PostId";
+import { CrossPostId } from "../CrossPostId";
 
 type PostsRepository = {
     /**
@@ -7,8 +8,9 @@ type PostsRepository = {
      */
     getPost: (postId: PostId) => Promise<Post>,
 
-    getCrossPostBatch: () => Promise<Array<Post>>
     getRandomPost: () => Promise<Post>,
+
+    getCrossPostBatch: (crossPostId: CrossPostId) => Promise<Array<Post>>
 
     /**
      * Store new post
