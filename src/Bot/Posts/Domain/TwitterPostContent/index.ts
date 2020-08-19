@@ -1,5 +1,5 @@
 import PostContentTooLong from '../Exceptions/PostContentTooLong';
-import { PostContent } from '../PostContent';
+import { PostContent, MakePostContent } from '../PostContent';
 
 const TWEET_MAX_LENGTH = 280;
 
@@ -10,9 +10,7 @@ const MakeTwitterPostContent = (content: string): TwitterPostContent => {
         throw PostContentTooLong.withMax(TWEET_MAX_LENGTH);
     }
 
-    return {
-        getValue: () => content,
-    }
+    return MakePostContent(content);
 }
 
 export default MakeTwitterPostContent;
