@@ -1,24 +1,30 @@
-import MakePostId, { PostId } from '../PostId';
+import { TwitterPost, MakeTwitterPostFromObject } from '../TwitterPost';
+import { PostId } from '../PostId';
+import { PostContent } from '../PostContent';
+import { CrossPostId } from '../CrossPostId';
 
-export type Post = {
+
+export type Post =  {
     getId: () => PostId,
-    getContent: () => string,
-}
-
-const MakePost = (id: PostId, content: string): Post => {
-    return {
-        getId: () => id,
-        getContent: () => content,
-    }
-}
-
-type PostPrimitiveObject = {
-    id: string,
-    content: string,
+    getContent: () => PostContent,
+    getType: () => 'twitter',
+    getImages: () => Array<string>,
+    getCrossPostId: () => CrossPostId,
+    toObject: () => PostPrimitiveObject,
 };
 
-export const MakePostFromObject = (data: PostPrimitiveObject): Post => {
-    return MakePost(MakePostId(data.id), data.content);
-} 
+export type PostPrimitiveObject = {
+    id: string,
+    content: string,
+    images: Array<string>,
+    type: 'twitter',
+    crossPostId: string,
+};
 
-export default MakePost;
+export const MakePostFromObject = (postData: PostPrimitiveObject): Post => {
+    if (postData.type === 'twitter') {
+        return MakeTwitterPostFromObject(postData);
+    }
+
+    throw Error('Invalid post type');
+}
