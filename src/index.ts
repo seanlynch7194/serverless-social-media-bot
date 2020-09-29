@@ -3,4 +3,4 @@ import Lambda from './App/Lambda/Handler';
 
 Bootstrap();
 
-Lambda();
+export default Lambda;
