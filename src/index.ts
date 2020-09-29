@@ -1,6 +1,8 @@
 import Bootstrap from './App/Bootstrap';
-import Lambda from './App/Lambda/Handler';
+import Publisher from './App/Lambda/Publisher';
 
 Bootstrap();
 
-export default Lambda;
+export default {
+    Publisher
+};
