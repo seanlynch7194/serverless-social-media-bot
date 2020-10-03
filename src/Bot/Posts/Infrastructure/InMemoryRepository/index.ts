@@ -3,6 +3,7 @@ import MakePostId, { PostId } from '../../Domain/PostId';
 import { MakePostFromObject, PostPrimitiveObject } from '../../Domain/Post';
 import { Post } from '../../Domain/Post';
 import { CrossPostId } from '../../Domain/CrossPostId';
+import { promises } from 'fs';
 
 let store: {[key: string]: PostPrimitiveObject} = {};
 
@@ -21,6 +22,10 @@ const InMemoryRepository = (): PostsRepository => {
             return Promise.resolve(postsByCrossPostId.map((post: PostPrimitiveObject) => {
                 return MakePostFromObject(post);
             }));
+        },
+
+        getRandomPost: () => {
+            return Promise.resolve(MakePostFromObject(store[0]));
         },
 
         addPost: (post: Post) => {

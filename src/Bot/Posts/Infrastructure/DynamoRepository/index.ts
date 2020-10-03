@@ -19,6 +19,17 @@ const DynamoRepository = (): PostsRepository => {
             return Promise.resolve([]);
         },
 
+        getRandomPost: () => {
+            const post = MakeTwitterPostFromObject({
+                id: 'xxx', 
+                content: 'Lorem ipsum',
+                type: 'twitter',
+                images: [],
+                crossPostId: '',
+            });
+            return Promise.resolve(post);
+        },
+
         addPost: () => {
             return Promise.resolve();
         },
