@@ -1,13 +1,21 @@
-service: serverless-social-media-bot
+service: ${env:BOT_NAME}-social-media-bot
 
-frameworkVersion: ">=1.1.0 <2.0.0"
+frameworkVersion: ">=2.3.0"
+
+plugins:
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
   runtime: nodejs12.x
-  region: eu-west-2
+  region: ${opt:region, eu-west-1}
+  stage: ${opt:env}
   environment:
-    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    POSTS_TABLE_NAME: ${env:POSTS_TABLE_NAME}
+    TWITTER_CONSUMER_KEY: ${env:TWITTER_CONSUMER_KEY}
+    TWITTER_CONSUMER_SECRET: ${env:TWITTER_CONSUMER_SECRET}
+    TWITTER_ACCESS_TOKEN: ${env:TWITTER_ACCESS_TOKEN}
+    TWITTER_ACCESS_TOKEN_SECRET: ${env:TWITTER_ACCESS_TOKEN_SECRET}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -17,17 +25,20 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.POSTS_TABLE_NAME}"
 
 functions:
   Publisher:
-    handler: src/index.Publisher
+    handler: dist/index.Publisher
     events:
-      - schedule: rate(1 day)
+      - schedule: 
+        rate: rate(1 day)
+        enabled: false
+
 
 resources:
   Resources:
-    TodosDynamoDbTable:
+    postsDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
@@ -35,11 +46,24 @@ resources:
           -
             AttributeName: id
             AttributeType: S
+          -
+            AttributeName: crossPostId
+            AttributeType: S
         KeySchema:
           -
             AttributeName: id
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: crossPostId
+            KeySchema:
+            - AttributeName: crossPostId
+              KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        TableName: ${self:provider.environment.POSTS_TABLE_NAME}
