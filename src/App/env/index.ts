@@ -33,7 +33,7 @@ const processValueType = (value: string): any => {
 
         case 'null':
         case '(null)':
-            return;
+            return null;
 
         default:
             return value;
