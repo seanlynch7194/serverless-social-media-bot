@@ -26,11 +26,5 @@ export default (networks: NetworkList): SocialNetwork => {
                 return network.publish(post);
             });
         },
-
-        testConnection: () => {
-            return mapNetworks((network: SocialNetwork) => {
-                return network.testConnection();
-            });
-        }
     };
 }

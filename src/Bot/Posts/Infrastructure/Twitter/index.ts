@@ -23,19 +23,6 @@ const Twitter = (config: TwitterConfig): SocialNetwork => {
         publish: (post: TwitterPost) => {
             return Promise.resolve();
         },
-
-        testConnection: () => {
-            console.log('testing connections');
-            return client
-                .get("account/verify_credentials")
-                .then(results => {
-                    console.log("results", results);
-                })
-                .catch((err) => {
-                    console.log('error');
-                    console.error(err);
-                });
-        }
     };
 }
 
