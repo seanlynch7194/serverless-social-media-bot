@@ -7,9 +7,10 @@ import PublishNextToAllNetworks from '../../Application/Commands/PublishNextToAl
 import env from '../../../../App/env';
 import SocialNetworks from '../../Domain/SocialNetworks';
 import MockSocialNetwork from '../../Infrastructure/MockSocialNetwork';
+import PostsRepository from '../../Domain/PostsRepository';
 
 const PostsServiceProvider = () => {
-    bind('PostsRepository', () => {
+    bind('PostsRepository', (): PostsRepository => {
         if (env('NODE_ENV') === 'local') {
             return InMemoryRepository(); 
         }
