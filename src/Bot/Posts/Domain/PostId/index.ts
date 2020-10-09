@@ -4,6 +4,8 @@ export type PostId = {
     getValue: () => string
 }
 
+export type PostIdCollection = PostId | Array<PostId>;
+
 /**
  * Make PostId value object
  * 
