@@ -4,7 +4,6 @@ import InMemoryRepository from '../../Infrastructure/InMemoryRepository';
 import Twitter from '../../Infrastructure/Twitter';
 import config from '../../../../App/Config';
 import PublishNextToAllNetworks from '../../Application/Commands/PublishNextToAllNetworks';
-import GetCrossPostCollection from '../../Application/Queries/GetCrossPostCollection';
 import env from '../../../../App/env';
 import SocialNetworks from '../../Domain/SocialNetworks';
 import MockSocialNetwork from '../../Infrastructure/MockSocialNetwork';
@@ -20,18 +19,11 @@ const PostsServiceProvider = () => {
 
     registerSocialNetworks();
     registerCommands();
-    registerQueries();
 }
 
 const registerCommands = (): void => {
     bind('PublishNextToAllNetworks', () => {
-        return PublishNextToAllNetworks(resolve('GetCrossPostCollection'), resolve('socialNetworks'));
-    })
-}
-
-const registerQueries = () => {
-    bind('GetCrossPostCollection', () => {
-        return GetCrossPostCollection(resolve('PostsRepository'))
+        return PublishNextToAllNetworks(resolve('PostsRepository'), resolve('socialNetworks'));
     })
 }
 
