@@ -3,7 +3,7 @@ import DynamoRepository from '../../Infrastructure/DynamoRepository';
 import InMemoryRepository from '../../Infrastructure/InMemoryRepository';
 import Twitter from '../../Infrastructure/Twitter';
 import config from '../../../../App/Config';
-import PostRandomToAllNetworks from '../../Application/Commands/PostRandomToAllNetworks';
+import PublishNextToAllNetworks from '../../Application/Commands/PublishNextToAllNetworks';
 import GetCrossPostCollection from '../../Application/Queries/GetCrossPostCollection';
 import env from '../../../../App/env';
 import SocialNetworks from '../../Domain/SocialNetworks';
@@ -24,8 +24,8 @@ const PostsServiceProvider = () => {
 }
 
 const registerCommands = (): void => {
-    bind('PostRandomToAllNetworks', () => {
-        return PostRandomToAllNetworks(resolve('GetCrossPostCollection'));
+    bind('PublishNextToAllNetworks', () => {
+        return PublishNextToAllNetworks(resolve('GetCrossPostCollection'), resolve('socialNetworks'));
     })
 }
 

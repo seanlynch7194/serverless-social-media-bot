@@ -1,5 +1,5 @@
 import PostsRepository from '../../Domain/PostsRepository';
-import MakePostId, { PostId } from '../../Domain/PostId';
+import MakePostId, { PostId, PostIdCollection } from '../../Domain/PostId';
 import { MakeTwitterPostFromObject } from '../../Domain/TwitterPost';
 
 const DynamoRepository = (): PostsRepository => {
@@ -15,11 +15,11 @@ const DynamoRepository = (): PostsRepository => {
             return Promise.resolve(post);
         },
 
-        getCrossPostBatch: () => {
+        getPostsByCrossPostId: () => {
             return Promise.resolve([]);
         },
 
-        getRandomPost: () => {
+        getNextPost: () => {
             const post = MakeTwitterPostFromObject({
                 id: 'xxx', 
                 content: 'Lorem ipsum',
@@ -34,7 +34,7 @@ const DynamoRepository = (): PostsRepository => {
             return Promise.resolve();
         },
 
-        removePost: (id: PostId): Promise<void> => {
+        removePost: (postIds: PostIdCollection): Promise<void> => {
             return Promise.resolve();
         }
     }

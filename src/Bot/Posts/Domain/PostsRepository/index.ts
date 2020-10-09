@@ -1,6 +1,8 @@
 import { Post } from "../Post";
-import { PostId } from "../PostId";
+import { PostId, PostIdCollection } from "../PostId";
 import { CrossPostId } from "../CrossPostId";
+
+
 
 type PostsRepository = {
     /**
@@ -8,9 +10,9 @@ type PostsRepository = {
      */
     getPost: (postId: PostId) => Promise<Post>,
 
-    getRandomPost: () => Promise<Post>,
+    getNextPost: () => Promise<Post | null>,
 
-    getCrossPostBatch: (crossPostId: CrossPostId) => Promise<Array<Post>>
+    getPostsByCrossPostId: (crossPostId: CrossPostId) => Promise<Array<Post>>
 
     /**
      * Store new post
@@ -20,7 +22,7 @@ type PostsRepository = {
     /**
      * Remove post by id from repository
      */
-    removePost: (postId: PostId) => Promise<void>
+    removePost: (postIds: PostIdCollection) => Promise<void>
 }
 
 export default PostsRepository;

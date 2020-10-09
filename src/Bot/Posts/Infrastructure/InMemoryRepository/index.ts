@@ -1,5 +1,5 @@
 import PostsRepository from '../../Domain/PostsRepository';
-import MakePostId, { PostId } from '../../Domain/PostId';
+import MakePostId, { PostId, PostIdCollection } from '../../Domain/PostId';
 import { MakePostFromObject, PostPrimitiveObject } from '../../Domain/Post';
 import { Post } from '../../Domain/Post';
 import { CrossPostId } from '../../Domain/CrossPostId';
@@ -14,7 +14,7 @@ const InMemoryRepository = (): PostsRepository => {
             return Promise.resolve(post);
         },
 
-        getCrossPostBatch: (crossPostId: CrossPostId) => {
+        getPostsByCrossPostId: (crossPostId: CrossPostId) => {
             const postsByCrossPostId = Object.values(store).filter((post: PostPrimitiveObject) => {
                 return post.crossPostId === crossPostId.getValue();
             });
@@ -24,7 +24,11 @@ const InMemoryRepository = (): PostsRepository => {
             }));
         },
 
-        getRandomPost: () => {
+        getNextPost: () => {
+            if (!store[0]) {
+                return Promise.resolve(null);
+            }
+
             return Promise.resolve(MakePostFromObject(store[0]));
         },
 
@@ -33,8 +37,16 @@ const InMemoryRepository = (): PostsRepository => {
             return Promise.resolve();
         },
 
-        removePost: (id: PostId): Promise<void> => {
-            delete store[id.getValue()];
+        removePost: (postIdCollection: PostIdCollection): Promise<void> => {
+            const purge = (id: PostId) => delete store[id.getValue()];
+            
+            if (Array.isArray(postIdCollection)) {
+                postIdCollection.map(purge);
+                return Promise.resolve();
+            } 
+
+            purge(postIdCollection);
+
             return Promise.resolve();
         }
     }
