@@ -3,15 +3,20 @@ import MakePostId, { PostId, PostIdCollection } from '../../Domain/PostId';
 import { MakePostFromObject, PostPrimitiveObject } from '../../Domain/Post';
 import { Post } from '../../Domain/Post';
 import { CrossPostId } from '../../Domain/CrossPostId';
-import { promises } from 'fs';
 
-let store: {[key: string]: PostPrimitiveObject} = {};
+const InMemoryRepository = (initialState = {}): PostsRepository => {
 
-const InMemoryRepository = (): PostsRepository => {
+    let store: {[key: string]: PostPrimitiveObject} = initialState;
+
     return {
         getPost: (postId: PostId) => {
-            const post = MakePostFromObject(store[postId.getValue()]);
-            return Promise.resolve(post);
+            const entry = store[postId.getValue()];
+
+            if (!entry) {
+                return Promise.resolve(null);
+            }
+            
+            return Promise.resolve(MakePostFromObject(entry));
         },
 
         getPostsByCrossPostId: (crossPostId: CrossPostId) => {
@@ -25,11 +30,13 @@ const InMemoryRepository = (): PostsRepository => {
         },
 
         getNextPost: () => {
-            if (!store[0]) {
+            const keys = Object.keys(store);
+
+            if (keys.length === 0) {
                 return Promise.resolve(null);
             }
 
-            return Promise.resolve(MakePostFromObject(store[0]));
+            return Promise.resolve(MakePostFromObject(store[keys[0]]));
         },
 
         addPost: (post: Post) => {
