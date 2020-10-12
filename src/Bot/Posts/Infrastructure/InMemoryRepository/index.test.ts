@@ -88,4 +88,37 @@ describe('InMemory Posts Repository', () => {
             });
         });
     });
+
+    it ('should remove many posts by passing an array of PostIds', () => {
+        const POST_ID_1 = uuidv4();
+        const POST_ID_2 = uuidv4();
+
+        const repository = InMemoryRepository({
+            [POST_ID_1]: {
+                id: POST_ID_1,
+                content: `I'm walking here!`,
+                images: [],
+                type: 'twitter',
+                crossPostId: '1234',
+            },
+            [POST_ID_2]: {
+                id: POST_ID_2,
+                content: 'Shaken, not stirred.',
+                images: [],
+                type: 'twitter',
+                crossPostId: '4321',
+            }
+        });
+
+        return repository.removePost([MakePostId(POST_ID_1), MakePostId(POST_ID_2)]).then(() => {
+            return Promise.all([
+                repository.getPost(MakePostId(POST_ID_1)).then((retrievedPost) => {
+                    expect(retrievedPost).toBeNull();
+                }),
+                repository.getPost(MakePostId(POST_ID_2)).then((retrievedPost) => {
+                    expect(retrievedPost).toBeNull();
+                }),
+            ]);
+        });
+    });
 });
