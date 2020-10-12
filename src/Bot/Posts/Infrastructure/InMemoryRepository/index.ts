@@ -4,9 +4,11 @@ import { MakePostFromObject, PostPrimitiveObject } from '../../Domain/Post';
 import { Post } from '../../Domain/Post';
 import { CrossPostId } from '../../Domain/CrossPostId';
 
-const InMemoryRepository = (initialState = {}): PostsRepository => {
+type MemoryStore = {[key: string]: PostPrimitiveObject};
 
-    let store: {[key: string]: PostPrimitiveObject} = initialState;
+const InMemoryRepository = (initialState: MemoryStore = {}): PostsRepository => {
+
+    let store: MemoryStore = initialState;
 
     return {
         getPost: (postId: PostId) => {
