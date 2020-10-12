@@ -8,7 +8,7 @@ type PostsRepository = {
     /**
      * Get a random post
      */
-    getPost: (postId: PostId) => Promise<Post>,
+    getPost: (postId: PostId) => Promise<Post | null>,
 
     getNextPost: () => Promise<Post | null>,
 
