@@ -1,10 +1,12 @@
 import app from './app';
 import twitter from './twitter';
+import aws from './aws';
 
 type ConfigStore = {[key: string]: any};
 
 let store: ConfigStore = {
     app,
+    aws,
     twitter: twitter,
 };
 
