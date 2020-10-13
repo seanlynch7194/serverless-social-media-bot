@@ -8,6 +8,7 @@ import env from '../../../../App/env';
 import SocialNetworks from '../../Domain/SocialNetworks';
 import MockSocialNetwork from '../../Infrastructure/MockSocialNetwork';
 import PostsRepository from '../../Domain/PostsRepository';
+import AWS from 'aws-sdk';
 
 const PostsServiceProvider = () => {
     bind('PostsRepository', (): PostsRepository => {
@@ -15,7 +16,15 @@ const PostsServiceProvider = () => {
             return InMemoryRepository(); 
         }
 
-        return DynamoRepository();
+        /**
+         * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html
+         */
+        const dynamodb = new AWS.DynamoDB({
+            accessKeyId: config('aws.access_key_id'),
+            secretAccessKey: config('aws.secret_access_key'),
+        });
+
+        return DynamoRepository(dynamodb);
     });
 
     registerSocialNetworks();
