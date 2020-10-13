@@ -5,13 +5,31 @@ module.exports = {
     tables: [
         {
             TableName: `Local-Posts`,
-            KeySchema: [{ AttributeName: 'Id', KeyType: 'HASH' }],
+            KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
             AttributeDefinitions: [{
-                AttributeName: 'Id', AttributeType: 'S'
+                AttributeName: 'id', AttributeType: 'S'
+            }, {
+                AttributeName: 'crossPostId', AttributeType: 'S'
             }],
-            ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 },
+            GlobalSecondaryIndexes: [{
+                IndexName: 'crossPostId',
+                KeySchema: [{
+                    AttributeName: 'crossPostId',
+                    KeyType: 'HASH'
+                }],
+                Projection: {
+                    ProjectionType: 'ALL'
+                },
+                ProvisionedThroughput: {
+                    ReadCapacityUnits: 1,
+                    WriteCapacityUnits: 1
+                },
+            }],
+            ProvisionedThroughput: { 
+                ReadCapacityUnits: 1, 
+                WriteCapacityUnits: 1
+            },
         },
-        // etc
     ],
-    port: 8011,
+    port: 8000,
 };
