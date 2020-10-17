@@ -38,21 +38,6 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, postsTable: string): PostsRepo
                         return resolve(null);
                     }
 
-                    const hasMissingProperties = [
-                        postData.Item.id.S,
-                        postData.Item.content.S,
-                        postData.Item.type.S,
-                        postData.Item.images.S,
-                        postData.Item.crossPostId.S,
-                    ].some((prop) => {
-                        if (!prop) return true;
-                        return false;
-                    });
-
-                    if (hasMissingProperties) {
-                        return reject(new Error());
-                    }
-
                     const post = MakePostFromObject({
                         id: postData.Item.id.S as string,
                         content: postData.Item.content.S as string,
@@ -156,7 +141,6 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, postsTable: string): PostsRepo
                             S: post.getCrossPostId().getValue(),
                         }
                     },
-                    // ReturnConsumedCapacity: "TOTAL",
                     TableName: postsTable,
                 };
 
