@@ -2,6 +2,7 @@ import { TwitterPost, MakeTwitterPostFromObject } from '../TwitterPost';
 import { PostId } from '../PostId';
 import { PostContent } from '../PostContent';
 import { CrossPostId } from '../CrossPostId';
+import InvalidPostType from '../Exceptions/InvalidPostType';
 
 
 export type Post =  {
@@ -26,5 +27,5 @@ export const MakePostFromObject = (postData: PostPrimitiveObject): Post => {
         return MakeTwitterPostFromObject(postData);
     }
 
-    throw Error('Invalid post type');
+    throw InvalidPostType.fromType(postData.type);
 }
