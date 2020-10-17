@@ -3,7 +3,14 @@ import MakePostId, { PostId, PostIdCollection } from '../../Domain/PostId';
 import { MakeTwitterPostFromObject } from '../../Domain/TwitterPost';
 import AWS from 'aws-sdk';
 import { Post } from '../../Domain/Post';
+import { CrossPostId } from '../../Domain/CrossPostId';
 
+
+/**
+ * 
+ * @param dynamoDb {AWS.DynamoDB}
+ * @param PostsTable {string} DynamoDb table name for storing posts
+ */
 const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepository => {
     return {
         /**
@@ -55,8 +62,43 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepo
             });
         },
 
-        getPostsByCrossPostId: () => {
-            return Promise.resolve([]);
+        /**
+         * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#query-property
+         */
+        getPostsByCrossPostId: (crossPostId: CrossPostId): Promise<Array<Post>> => {
+            return new Promise((resolve, reject) => {
+                const params = {
+                    ExpressionAttributeValues: {
+                        ":v1": {
+                            S: crossPostId.getValue(),
+                        }
+                    },
+                    KeyConditionExpression: "crossPostId = :v1",
+                    IndexName: 'crossPostId',
+                    TableName: PostsTable,
+                };
+
+                dynamoDb.query(params, function (err, posts) {
+                    if (err) { 
+                        console.log(err, err.stack); // an error occurred
+                        return reject(err);
+                    }
+
+                    if (!posts.Items) {
+                        return resolve([]);
+                    }
+
+                    return resolve(posts.Items.map((postData) => {
+                        return MakeTwitterPostFromObject({
+                            id: postData.id.S as string,
+                            content: postData.content.S as string,
+                            type: postData.type.S as 'twitter',
+                            images: JSON.parse(postData.images.S as string),
+                            crossPostId: postData.crossPostId.S as string,
+                        });
+                    }));
+                });
+            });
         },
 
         getNextPost: () => {
