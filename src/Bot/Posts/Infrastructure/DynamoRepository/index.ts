@@ -1,17 +1,18 @@
 import PostsRepository from '../../Domain/PostsRepository';
-import MakePostId, { PostId, PostIdCollection } from '../../Domain/PostId';
-import { MakeTwitterPostFromObject } from '../../Domain/TwitterPost';
+import MakePostId, { PostId, PostIdCollection, GeneratePostId } from '../../Domain/PostId';
+import { MakePostFromObject } from '../../Domain/Post';
 import AWS from 'aws-sdk';
 import { Post } from '../../Domain/Post';
 import { CrossPostId } from '../../Domain/CrossPostId';
+import chunk from '../../../../App/Helpers/chunk';
 
 
 /**
  * 
  * @param dynamoDb {AWS.DynamoDB}
- * @param PostsTable {string} DynamoDb table name for storing posts
+ * @param postsTable {string} DynamoDb table name for storing posts
  */
-const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepository => {
+const DynamoRepository = (dynamoDb: AWS.DynamoDB, postsTable: string): PostsRepository => {
     return {
         /**
          * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#getItem-property
@@ -25,7 +26,7 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepo
                             S: postId.getValue(),
                         },
                     },
-                    TableName: PostsTable,
+                    TableName: postsTable,
                 };
                 
                 dynamoDb.getItem(params, function (err, postData) {
@@ -52,7 +53,7 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepo
                         return reject(new Error());
                     }
 
-                    const post = MakeTwitterPostFromObject({
+                    const post = MakePostFromObject({
                         id: postData.Item.id.S as string,
                         content: postData.Item.content.S as string,
                         type: postData.Item.type.S as 'twitter',
@@ -78,7 +79,7 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepo
                     },
                     KeyConditionExpression: "crossPostId = :v1",
                     IndexName: 'crossPostId',
-                    TableName: PostsTable,
+                    TableName: postsTable,
                 };
 
                 dynamoDb.query(params, function (err, posts) {
@@ -92,7 +93,7 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepo
                     }
 
                     return resolve(posts.Items.map((postData) => {
-                        return MakeTwitterPostFromObject({
+                        return MakePostFromObject({
                             id: postData.id.S as string,
                             content: postData.content.S as string,
                             type: postData.type.S as 'twitter',
@@ -105,14 +106,31 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepo
         },
 
         getNextPost: () => {
-            const post = MakeTwitterPostFromObject({
-                id: 'xxx', 
-                content: 'Lorem ipsum',
-                type: 'twitter',
-                images: [],
-                crossPostId: '',
+            return new Promise((resolve, reject) => {
+                const params = {
+                    TableName: postsTable,
+                    Limit : 1,
+                }
+
+                dynamoDb.scan(params, function (err, postData) {
+                    if (err) { 
+                        console.log(err, err.stack); // an error occurred
+                        return reject(err);
+                    }
+
+                    if (!postData.Items || postData.Items.length === 0) {
+                        return resolve(null);
+                    }
+
+                    return resolve(MakePostFromObject({
+                        id: postData.Items[0].id.S as string,
+                        content: postData.Items[0].content.S as string,
+                        type: postData.Items[0].type.S as 'twitter',
+                        images: JSON.parse(postData.Items[0].images.S as string),
+                        crossPostId: postData.Items[0].crossPostId.S as string,
+                    }));
+                });
             });
-            return Promise.resolve(post);
         },
 
         /**
@@ -139,7 +157,7 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepo
                         }
                     },
                     // ReturnConsumedCapacity: "TOTAL",
-                    TableName: PostsTable,
+                    TableName: postsTable,
                 };
 
                 dynamoDb.putItem(params, function (err, data) {
@@ -152,9 +170,47 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepo
                 });
             });
         },
-
+        
+        /**
+         * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#deleteItem-property
+         * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html#batchWriteItem-property
+         */
         removePost: (postIds: PostIdCollection): Promise<void> => {
-            return Promise.resolve();
+
+            // Dynamo only allows 25 items in a batch write
+            const chunkInto25 = (arr: Array<PostId>): Array<Array<PostId>> => chunk(arr, 25);
+            const postIdBatches = Array.isArray(postIds) ? chunkInto25(postIds) : chunkInto25([postIds]);
+
+            return Promise.all(postIdBatches.map((batch) => {
+                return new Promise((resolve, reject) => {
+                    const params = {
+                        RequestItems: {
+                            [postsTable]: batch.map((postId) => {
+                                return {
+                                    DeleteRequest: {
+                                        Key: {
+                                            'id': {
+                                                S: postId.getValue(),
+                                            }, 
+                                        },
+                                    },
+                                }
+                            }),
+                        }
+                    };
+    
+                    dynamoDb.batchWriteItem(params, function (err, data) {
+                        if (err) { 
+                            console.log(err, err.stack); // an error occurred
+                            return reject(err);
+                        }
+                        
+                        resolve();
+                    });
+                });
+            })).then((batchResults) => {
+                return;
+            }) 
         }
     }
 }

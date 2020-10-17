@@ -86,4 +86,78 @@ describe('DynamoRepository', () => {
             expect(retrievedPost).toBeNull();
         });
     });
+
+    it ('should remove a persisted post by id', () => {
+        const postId = uuidv4();
+
+        const post = MakePostFromObject({
+            id: postId,
+            content: `I’ll be back.`,
+            images: [],
+            type: 'twitter',
+            crossPostId: uuidv4(),
+        });
+
+        return repository.addPost(post).then(() => {
+            return repository.removePost(MakePostId(postId)).then(() => {
+                return repository.getPost(MakePostId(postId)).then((retrievedPost) => {
+                    expect(retrievedPost).toBeNull();
+                });
+            });
+        });
+    });
+
+    it ('should remove many posts by passing an array of PostIds', () => {
+        const POST_ID_1 = uuidv4();
+        const POST_ID_2 = uuidv4();
+
+        const seed = [POST_ID_1, POST_ID_2];
+
+        return Promise.all(seed.map((postId) => {
+            return repository.addPost(MakePostFromObject({
+                id: postId,
+                content: `The greatest trick the devil ever pulled was convincing the world he didn't exist.`,
+                images: [],
+                type: 'twitter',
+                crossPostId: uuidv4(),
+            }));
+        })).then(() => {
+            return repository.removePost([MakePostId(POST_ID_1), MakePostId(POST_ID_2)]).then(() => {
+                return Promise.all([
+                    repository.getPost(MakePostId(POST_ID_1)).then((retrievedPost) => {
+                        expect(retrievedPost).toBeNull();
+                    }),
+                    repository.getPost(MakePostId(POST_ID_2)).then((retrievedPost) => {
+                        expect(retrievedPost).toBeNull();
+                    }),
+                ]);
+            }); 
+        });
+    }); 
+
+    it ('should return any post', () => {
+        // Add post so there is at least 1 to query
+        return repository.addPost(MakePostFromObject({
+            id: uuidv4(),
+            content: `The greatest teacher, failure is.`,
+            images: [],
+            type: 'twitter',
+            crossPostId: uuidv4(),
+        })).then(() => {
+            return repository.getNextPost().then((post) => {
+                expect(typeof post.getId().getValue()).toBe('string');
+
+                return post.getId();
+            });
+        }).then((prevPostId) => {
+            // remove the last post to make sure we get a different next post
+            return repository.removePost(prevPostId).then(() => {
+                return repository.getNextPost().then((post) => {
+                    if (post) {
+                        expect(prevPostId.getValue()).not.toBe(post.getId().getValue())
+                    }
+                });
+            })
+        });
+    })
 });
