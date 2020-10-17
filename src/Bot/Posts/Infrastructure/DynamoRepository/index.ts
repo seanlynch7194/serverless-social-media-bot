@@ -29,9 +29,12 @@ const DynamoRepository = (dynamoDb: AWS.DynamoDB, PostsTable: string): PostsRepo
                 };
                 
                 dynamoDb.getItem(params, function (err, postData) {
-                    if (err || !postData.Item) { 
-                        console.log(err, err.stack); // an error occurred
+                    if (err) { 
                         return reject(err);
+                    }
+
+                    if (!postData.Item) {
+                        return resolve(null);
                     }
 
                     const hasMissingProperties = [

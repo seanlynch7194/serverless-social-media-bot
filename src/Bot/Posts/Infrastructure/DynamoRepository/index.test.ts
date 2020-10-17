@@ -80,4 +80,10 @@ describe('DynamoRepository', () => {
             });
         });
     });
+
+    it ('should return null if the postId does not exist', () => {
+        return repository.getPost(MakePostId('nonExistentId')).then((retrievedPost) => {
+            expect(retrievedPost).toBeNull();
+        });
+    });
 });
