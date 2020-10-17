@@ -24,7 +24,7 @@ const PostsServiceProvider = () => {
             secretAccessKey: config('aws.secret_access_key'),
         });
 
-        return DynamoRepository(dynamodb);
+        return DynamoRepository(dynamodb, config('app.postsTable'));
     });
 
     registerSocialNetworks();
