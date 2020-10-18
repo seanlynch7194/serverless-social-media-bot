@@ -22,6 +22,7 @@ const PostsServiceProvider = () => {
         const dynamodb = new AWS.DynamoDB({
             accessKeyId: config('aws.access_key_id'),
             secretAccessKey: config('aws.secret_access_key'),
+            region: config('app.region'),
         });
 
         return DynamoRepository(dynamodb, config('app.postsTable'));
