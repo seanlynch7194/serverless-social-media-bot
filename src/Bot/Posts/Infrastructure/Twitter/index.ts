@@ -21,7 +21,11 @@ const Twitter = (config: TwitterConfig): SocialNetwork => {
       
     return {
         publish: (post: TwitterPost) => {
-            return Promise.resolve();
+            return client.post('statuses/update', {
+                status: post.getContent().getValue(),
+            }).then((response) => {
+                return;
+            });
         },
     };
 }
