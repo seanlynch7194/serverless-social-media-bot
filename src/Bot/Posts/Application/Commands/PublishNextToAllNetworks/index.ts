@@ -6,7 +6,10 @@ import { PostId } from '../../../Domain/PostId';
 const PublishNextToAllNetworks = (postsRepository: PostsRepository, socialNetworks: SocialNetwork) => {
     return async () => {
         const nextPost = await postsRepository.getNextPost();
-        if (!nextPost) return Promise.resolve();    
+        if (!nextPost) {
+            console.log('No posts to publish');
+            return Promise.resolve();
+        }
 
         const posts = await postsRepository.getPostsByCrossPostId(nextPost.getCrossPostId());
 
