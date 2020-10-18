@@ -6,5 +6,7 @@ export default {
         PostsServiceProvider,
     ],
 
+    region: env('REGION'),
+
     postsTable: env('POSTS_TABLE_NAME'),
 };
