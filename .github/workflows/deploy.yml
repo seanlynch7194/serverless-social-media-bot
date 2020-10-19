@@ -29,9 +29,10 @@ jobs:
     - name: Build 
       run: npm run build
 
+    - name: Serverless Config
+      run: serverless config credentials --provider aws --key ${{ secrets.DEPLOY_AWS_ACCESS_KEY_ID }} --secret ${{ secrets.DEPLOY_AWS_SECRET_ACCESS_KEY }}
+
     - name: Deploy 
-      uses: serverless/github-action@master
-      with:
-        args: deploy --env=production --region=eu-west-1
+      run: serverless deploy --env=production --region=eu-west-1
       env:
         NODE_ENV: production
