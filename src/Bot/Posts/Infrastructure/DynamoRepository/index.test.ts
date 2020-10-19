@@ -4,6 +4,8 @@ import MakePostId, { GeneratePostId } from '../../Domain/PostId';
 import { v4 as uuidv4 } from 'uuid';
 import { MakeCrossPostId } from '../../Domain/CrossPostId';
 import AWS from 'aws-sdk';
+import config from '../../../../App/Config';
+
 
 describe('DynamoRepository', () => {
     const dynamodb = new AWS.DynamoDB({
@@ -12,7 +14,7 @@ describe('DynamoRepository', () => {
         region: 'local-env',
       });
 
-    const repository = DynamoRepository(dynamodb, 'Local-Posts');
+    const repository = DynamoRepository(dynamodb, config('app.postsTable'));
 
     it ('should persist a post', () => {
         const postId = uuidv4();
