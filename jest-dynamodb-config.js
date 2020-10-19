@@ -3,7 +3,9 @@
  */
 module.exports = async () => {
 
-    require('dotenv').config();
+    if (process.env.NODE_ENV !== 'ci') {
+        require('dotenv').config();
+    }
 
     /**
      * @see https://github.com/shelfio/jest-dynamodb#22-examples
