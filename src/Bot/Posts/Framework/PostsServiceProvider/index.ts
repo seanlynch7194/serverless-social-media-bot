@@ -12,20 +12,20 @@ import AWS from 'aws-sdk';
 
 const PostsServiceProvider = () => {
     bind('PostsRepository', (): PostsRepository => {
-        if (env('NODE_ENV') === 'local') {
-            return InMemoryRepository(); 
+        if (env('NODE_ENV') === 'production') {
+            /**
+             * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html
+             */
+            const dynamodb = new AWS.DynamoDB({
+                accessKeyId: config('aws.access_key_id'),
+                secretAccessKey: config('aws.secret_access_key'),
+                region: config('app.region'),
+            });
+
+            return DynamoRepository(dynamodb, config('app.postsTable'));
         }
 
-        /**
-         * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html
-         */
-        const dynamodb = new AWS.DynamoDB({
-            accessKeyId: config('aws.access_key_id'),
-            secretAccessKey: config('aws.secret_access_key'),
-            region: config('app.region'),
-        });
-
-        return DynamoRepository(dynamodb, config('app.postsTable'));
+        return InMemoryRepository(); 
     });
 
     registerSocialNetworks();
@@ -45,11 +45,11 @@ const registerCommands = (): void => {
  */
 const registerSocialNetworks = () => {
     bind('socialNetworks', () => {
-        if (env('NODE_ENV') === 'local') {
-            return SocialNetworks([MockSocialNetwork()]);
+        if (env('NODE_ENV') === 'production') {
+            return SocialNetworks([resolve('Twitter')]);
         }
 
-        return SocialNetworks([resolve('Twitter')]);
+        return SocialNetworks([MockSocialNetwork()]);
     });
 
     bind('Twitter', () => {
