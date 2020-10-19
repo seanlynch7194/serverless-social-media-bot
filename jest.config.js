@@ -1,4 +1,5 @@
 module.exports = {
+    setupFiles: ["dotenv/config"],
     roots: ['<rootDir>/src'],
     transform: {
         '^.+\\.ts?$': '<rootDir>/node_modules/babel-jest',

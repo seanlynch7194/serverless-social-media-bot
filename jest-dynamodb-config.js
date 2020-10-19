@@ -3,6 +3,8 @@
  */
 module.exports = async () => {
 
+    require('dotenv').config();
+
     /**
      * @see https://github.com/shelfio/jest-dynamodb#22-examples
      */
