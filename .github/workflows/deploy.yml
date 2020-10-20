@@ -23,9 +23,6 @@ jobs:
     - name: Install Modules
       run: npm ci
 
-    - name: debug envs
-      run: echo ${{env.POSTS_TABLE_NAME}}
-
     - name: Test
       run: npm run test
 
