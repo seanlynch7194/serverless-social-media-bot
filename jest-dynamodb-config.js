@@ -12,9 +12,9 @@ module.exports = async () => {
     const serverless = new (require('serverless'))();
     
     await serverless.init();
-    serverless.service.provider.environment = Object.keys(serverless.service.provider.environment).map((key) => {
-        return environmentVariables[key];
-    });
+    serverless.service.provider.environment = Object.keys(serverless.service.provider.environment).reduce((serverlessEnvs, key) => {
+        return Object.assign({}, serverlessEnvs, {[key]: environmentVariables[key]});
+    }, {});
     const service = await serverless.variables.populateService({
         region: 'eu-west-1',
         env: 'local',
@@ -36,9 +36,9 @@ module.exports = async () => {
 };
 
 const getEnvs = () => {
-    if (process.env.NODE_ENV === 'local') {
+    try {
         return require('dotenv').config().parsed;
-    } else {
+    } catch(err) {
         return process.env;
     }
 }
