@@ -29,11 +29,6 @@ jobs:
     - name: Build 
       run: npm run build
 
-    - name: Serverless Config 
-      uses: serverless/github-action@master
-      with:
-        args: config credentials --provider aws --key ${{ secrets.DEPLOY_AWS_ACCESS_KEY_ID }} --secret ${{ secrets.DEPLOY_AWS_SECRET_ACCESS_KEY }}
-
     - name: Serverless Deploy 
       uses: serverless/github-action@master
       with:
