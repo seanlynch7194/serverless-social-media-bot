@@ -4,6 +4,8 @@
 module.exports = async () => {
     const dotEnvVariables = require('dotenv').config();
 
+    console.log('dotEnvVariables', dotEnvVariables);
+
     /**
      * @see https://github.com/shelfio/jest-dynamodb#22-examples
      */
@@ -15,6 +17,8 @@ module.exports = async () => {
         region: 'eu-west-1',
         env: 'local',
     });
+
+    console.log('serverless.service.provider.environment', serverless.service.provider.environment);
 
     const resources = service.resources.Resources;
   
