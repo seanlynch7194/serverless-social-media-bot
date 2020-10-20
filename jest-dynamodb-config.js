@@ -2,10 +2,7 @@
  * @see https://jestjs.io/docs/en/dynamodb#use-jest-dynamodb-preset
  */
 module.exports = async () => {
-
-    if (process.env.NODE_ENV !== 'ci') {
-        require('dotenv').config();
-    }
+    const dotEnvVariables = require('dotenv').config();
 
     /**
      * @see https://github.com/shelfio/jest-dynamodb#22-examples
@@ -13,6 +10,7 @@ module.exports = async () => {
     const serverless = new (require('serverless'))();
     
     await serverless.init();
+    serverless.service.provider.environment = Object.assign({}, serverless.service.provider.environment, dotEnvVariables.parsed);
     const service = await serverless.variables.populateService({
         region: 'eu-west-1',
         env: 'local',
