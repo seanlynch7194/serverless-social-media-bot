@@ -36,9 +36,10 @@ module.exports = async () => {
 };
 
 const getEnvs = () => {
-    try {
-        return require('dotenv').config().parsed;
-    } catch(err) {
-        return process.env;
+    const dotEnvs = require('dotenv').config();
+    if (dotEnvs.parsed) {
+        return dotEnvs.parsed;
     }
+
+    return process.env;
 }
