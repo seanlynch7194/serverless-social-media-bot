@@ -4,8 +4,6 @@
 module.exports = async () => {
     const environmentVariables = getEnvs();
 
-    console.log('environmentVariables', environmentVariables);
-
     /**
      * @see https://github.com/shelfio/jest-dynamodb#22-examples
      */
@@ -19,8 +17,6 @@ module.exports = async () => {
         region: 'eu-west-1',
         env: 'local',
     });
-
-    console.log('serverless.service.provider.environment', serverless.service.provider.environment);
 
     const resources = service.resources.Resources;
   
