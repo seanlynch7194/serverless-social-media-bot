@@ -2,8 +2,8 @@ service: ${env:BOT_NAME}-social-media-bot
 
 frameworkVersion: ">=2.3.0"
 
-# plugins:
-#   - serverless-dotenv-plugin
+plugins:
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
