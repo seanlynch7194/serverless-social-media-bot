@@ -1,4 +1,5 @@
 console.log(process.env);
 
-console.log('POSTS_TABLE_NAME', process.env.POSTS_TABLE_NAME);
-console.log('POSTS_TABLE_NAME_join', process.env.POSTS_TABLE_NAME.split('').join('.'));
+
+console.log('ptn_join', process.env.POSTS_TABLE_NAME.split('').join('.'));
+console.log('ter_join', process.env.TEST_ENV_REPLACEMENT.split('').join('.'));
