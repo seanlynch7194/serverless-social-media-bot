@@ -3,6 +3,6 @@ import Publisher from './App/Lambda/Publisher';
 
 Bootstrap();
 
-export default {
+export {
     Publisher
 };
