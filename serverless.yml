@@ -14,8 +14,6 @@ provider:
     NODE_ENV: ${env.NODE_ENV}
     BOT_NAME: ${env.BOT_NAME}
     REGION: ${env.REGION}
-    AWS_ACCESS_KEY_ID: ${env.AWS_ACCESS_KEY_ID}
-    AWS_SECRET_ACCESS_KEY: ${env.AWS_SECRET_ACCESS_KEY}
     POSTS_TABLE_NAME: ${env.POSTS_TABLE_NAME}
     TWITTER_CONSUMER_KEY: ${env.TWITTER_CONSUMER_KEY}
     TWITTER_CONSUMER_SECRET: ${env.TWITTER_CONSUMER_SECRET}
@@ -39,7 +37,6 @@ functions:
       - schedule: 
         rate: rate(1 day)
         enabled: false
-
 
 resources:
   Resources:
