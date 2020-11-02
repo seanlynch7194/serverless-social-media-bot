@@ -19,11 +19,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Debug env
-      run: node scripts/debug/index.js
-      env:
-        TEST_ENV_REPLACEMENT: 'too old, too fucking blind'
-
     - name: Install Modules
       run: npm ci
 
