@@ -43,8 +43,8 @@ functions:
     handler: dist/index.Publisher
     events:
       - schedule: 
-        rate: rate(1 day)
-        enabled: true
+          rate: rate(1 day)
+          enabled: true
 
 resources:
   Resources:
