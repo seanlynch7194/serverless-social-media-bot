@@ -30,6 +30,14 @@ provider:
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.POSTS_TABLE_NAME}"
 
+package:
+  exclude:
+    - src/**
+    - babel.config.js
+    - jest-dynamodb-config.js
+    - jest.config.js
+    - tsconfig.json
+
 functions:
   Publisher:
     handler: dist/index.Publisher
