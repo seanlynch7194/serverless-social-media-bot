@@ -2,8 +2,8 @@ service: ${env:BOT_NAME}-social-media-bot
 
 frameworkVersion: ">=2.3.0"
 
-plugins:
-  - serverless-dotenv-plugin
+# plugins:
+#   - serverless-dotenv-plugin
 
 provider:
   name: aws
@@ -11,14 +11,14 @@ provider:
   region: ${opt:region, eu-west-1}
   stage: ${opt:env}
   environment:
-    NODE_ENV: ${env.NODE_ENV}
-    BOT_NAME: ${env.BOT_NAME}
-    REGION: ${env.REGION}
-    POSTS_TABLE_NAME: ${env.POSTS_TABLE_NAME}
-    TWITTER_CONSUMER_KEY: ${env.TWITTER_CONSUMER_KEY}
-    TWITTER_CONSUMER_SECRET: ${env.TWITTER_CONSUMER_SECRET}
-    TWITTER_ACCESS_TOKEN: ${env.TWITTER_ACCESS_TOKEN}
-    TWITTER_ACCESS_TOKEN_SECRET: ${env.TWITTER_ACCESS_TOKEN_SECRET}
+    NODE_ENV: ${env:NODE_ENV}
+    BOT_NAME: ${env:BOT_NAME}
+    REGION: ${env:REGION}
+    POSTS_TABLE_NAME: ${env:POSTS_TABLE_NAME}
+    TWITTER_CONSUMER_KEY: ${env:TWITTER_CONSUMER_KEY}
+    TWITTER_CONSUMER_SECRET: ${env:TWITTER_CONSUMER_SECRET}
+    TWITTER_ACCESS_TOKEN: ${env:TWITTER_ACCESS_TOKEN}
+    TWITTER_ACCESS_TOKEN_SECRET: ${env:TWITTER_ACCESS_TOKEN_SECRET}
   iamRoleStatements:
     - Effect: Allow
       Action:
