@@ -1,14 +1,19 @@
 import app from './app';
 import twitter from './twitter';
 import aws from './aws';
+import sentry from './sentry';
 
 type ConfigStore = {[key: string]: any};
 
 let store: ConfigStore = {
     app,
     aws,
-    twitter: twitter,
+    twitter,
+    sentry,
 };
+
+
+console.log('ConfigStore', store);
 
 /**
  * 
