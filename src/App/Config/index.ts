@@ -12,9 +12,6 @@ let store: ConfigStore = {
     sentry,
 };
 
-
-console.log('ConfigStore', store);
-
 /**
  * 
  * @param key The configuration values may be accessed using "dot" syntax
