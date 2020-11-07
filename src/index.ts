@@ -1,8 +1,10 @@
 import Bootstrap from './App/Bootstrap';
-import Publisher from './App/Lambda/Publisher';
+import PublisherFn from './App/Lambda/Publisher';
+import IErrorTracker from './App/Services/ErrorTracker/Domain/ErrorTracker';
+import { resolve } from './App/Container';
 
 Bootstrap();
 
-export {
-    Publisher
-};
+const ErrorTracker: IErrorTracker = resolve('ErrorTracker');
+
+export const Publisher = ErrorTracker.handler(PublisherFn);
