@@ -22,6 +22,11 @@ const ServiceProvider = () => {
                 captureException: (err: Error) => {
                     console.log('ErrorTracker captured: ', err);
                     return Promise.resolve();
+                },
+
+                setContext: (key: string, value: any) => {
+                    console.log('Setting ErrorTracker context', key, value);
+                    return Promise.resolve();
                 }
             } as ErrorTracker;
         }

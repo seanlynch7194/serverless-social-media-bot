@@ -5,6 +5,7 @@ jest.mock('@sentry/serverless', () => {
             wrapHandler: jest.fn(),
         },
         captureException: jest.fn(),
+        setContext: jest.fn(),
     }
 })
 
@@ -52,4 +53,19 @@ describe('Sentry', () => {
 
         expect(SentryIO.captureException).toHaveBeenCalledWith(error);
     });
+
+    it ('should set additional context', () => {
+        const ErrorTracker = Sentry('mock_dsn', 'stage');
+        const post = {
+            id: 'ea59d635-356e-48fd-afbf-3c337dd30e5b',
+            content: `If you're nothing without the suit, then you shouldn't have it.`,
+            images: [],
+            type: 'twitter',
+            crossPostId: 'ea59d635-356e-48fd-afbf-3c337dd30e5b',
+        };
+        
+        ErrorTracker.setContext('post', post);
+
+        expect(SentryIO.setContext).toHaveBeenCalledWith('post', post);
+    })
 });

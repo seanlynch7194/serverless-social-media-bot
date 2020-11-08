@@ -17,6 +17,11 @@ const Sentry = (dsn: string, environment: Environment): ErrorTracker => {
         captureException: (err: Error): Promise<void> => {
             SentryIO.captureException(err);
             return Promise.resolve();
+        },
+
+        setContext: (key: string, value: any): Promise<void> => {
+            SentryIO.setContext(key, value);
+            return Promise.resolve();
         }
     };
 }
