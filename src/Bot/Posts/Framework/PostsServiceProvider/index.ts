@@ -32,7 +32,11 @@ const PostsServiceProvider = () => {
 
 const registerCommands = (): void => {
     bind('PublishNextToAllNetworks', () => {
-        return PublishNextToAllNetworks(resolve('PostsRepository'), resolve('socialNetworks'));
+        return PublishNextToAllNetworks(
+            resolve('PostsRepository'), 
+            resolve('socialNetworks'), 
+            resolve('ErrorTracker')
+        );
     })
 }
 

@@ -1,4 +1,5 @@
 import InMemoryRepository from '../../../Infrastructure/InMemoryRepository';
+import InMemoryErrorTracker from '../../../../../App/Services/ErrorTracker/Infrastructure/InMemory';
 import PublishNextToAllNetworks from './';
 import { Post, MakePostFromObject, PostPrimitiveObject } from '../../../Domain/Post';
 import { SocialNetwork } from '../../../Domain/SocialNetwork';
@@ -35,9 +36,10 @@ describe('PublishNextToAllNetworks', () => {
     it ('should publish all cross posts and remove them from the repository', () => {
         const repository = InMemoryRepository();
         const network = makeMockNetwork();
+        const errorTracker = InMemoryErrorTracker();
 
         return saturateRepository(repository).then(() => {
-            return PublishNextToAllNetworks(repository, network)().then(() => {
+            return PublishNextToAllNetworks(repository, network, errorTracker)().then(() => {
                 // TODO: test that publish was called with each post
                 expect(network.publish).toHaveBeenCalledTimes(2);
 
