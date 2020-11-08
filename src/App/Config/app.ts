@@ -8,7 +8,7 @@ export default {
         ErrorTrackerServiceProvider,
     ],
 
-    env: env('APP_ENV'),
+    env: env('NODE_ENV'),
 
     region: env('REGION'),
 
