@@ -6,17 +6,16 @@ import { Environment } from '../../../../../Bot/Shared/Domain/Environment';
 
 const ServiceProvider = () => {
     bind('ErrorTracker', (): ErrorTracker => {
-
+        
         if (config('app.env') as Environment === 'local') {
             return {
-                handler: (handler: Function) => {
+                handler: (fn: Function) => {
                     return (...args: any) => {
-                        try {
-                            handler(...args);
-                        } catch (err) {
-                            console.log('ErrorTracker handled: ', err);
-                            throw err;
-                        }
+                        return fn(...args)
+                            .catch((err: Error) => {
+                                console.log('ErrorTracker handled: ', err);
+                                throw err;
+                            });
                     };
                 },
 
