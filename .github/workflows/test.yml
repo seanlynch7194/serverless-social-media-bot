@@ -2,11 +2,26 @@ name: Tests
 on: [pull_request]
 jobs:
   test:
+    env:
+      NODE_ENV: ci
+      BOT_NAME: ${{ secrets.BOT_NAME }}
+      REGION: ${{ secrets.REGION }}
+      POSTS_TABLE_NAME: ${{ secrets.POSTS_TABLE_NAME }}
+      TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+      TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+      TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+      TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+
     - name: Install modules
       run: npm install
+    
+    - name: Build 
+      run: npm run build
+      
     - name: Run tests
       run: npm test
       
