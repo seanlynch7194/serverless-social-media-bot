@@ -19,10 +19,10 @@ While this is not a common use case it is possible to set individual configurati
 ```javascript
 import { set } from './';
 
-const postsTable = set('custom.cacheDuration', 300);
+const cacheDuration = set('custom.cacheDuration', 300);
 ```
 
-Similar to setting a value you can also reset the entire config but this is again not recommended and is primiarly used for unit testing.
+Similar to setting a value you can also reset the entire config but this is again not recommended and is primarily used for unit testing.
 
 ```javascript
 import { reset } from './';
