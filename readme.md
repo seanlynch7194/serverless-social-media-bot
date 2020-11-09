@@ -40,6 +40,9 @@ Using GitHub Actions the `deploy` workflow on merge to `master` will build the T
 
 All the required environment variables should be added as GitHub Secrets.
 
+## Changing The Schedule
+The Publisher Lambda function will be invoked once a day, you can change the rate in `serverless.yml`.
+
 ## Build
 Application is written in Typescript to compile into plain Javascript use the build command
 
