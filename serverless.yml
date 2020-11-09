@@ -32,6 +32,7 @@ package:
     - jest-dynamodb-config.js
     - jest.config.js
     - tsconfig.json
+    - LICENSE
 
 functions:
   Publisher:
